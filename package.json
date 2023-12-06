@@ -1,0 +1,19 @@
+{
+    "dependencies": {
+        "@codemirror/autocomplete": "^6.11.1",
+        "@codemirror/lang-javascript": "^6.2.1",
+        "@codemirror/language": "^6.9.3",
+        "@codemirror/lint": "^6.4.2",
+        "@codemirror/search": "^6.5.5",
+        "@codemirror/state": "^6.3.3",
+        "@codemirror/theme-one-dark": "^6.1.2",
+        "@codemirror/view": "^6.22.1",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "codemirror": "^6.0.1",
+        "eslint-linter-browserify": "^8.55.0",
+        "rollup": "^4.6.1"
+    },
+    "scripts": {
+        "build": "node_modules/.bin/rollup -c"
+    }
+}
