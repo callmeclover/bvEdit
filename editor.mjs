@@ -1,6 +1,6 @@
-import { EditorView, keymap, lineNumbers, gutter, showPanel, Panel } from "@codemirror/view";
+import { EditorView, keymap, lineNumbers, gutter, drawSelection } from "@codemirror/view";
 import { javascript, esLint, autoCloseTags } from "@codemirror/lang-javascript";
-import { search } from "@codemirror/search";
+import { search, searchKeymap } from "@codemirror/search";
 import {
   autocompletion,
   snippetKeymap,
@@ -10,9 +10,13 @@ import {
 import { foldKeymap } from "@codemirror/language";
 import { lintGutter, lintKeymap, linter } from "@codemirror/lint";
 import { oneDark } from "@codemirror/theme-one-dark"
-import { Text } from "@codemirror/state"
+import { history, historyKeymap, defaultKeymap } from "@codemirror/commands"
 
 import * as eslint from "eslint-linter-browserify";
+
+window.onerror = (err)=>{
+  window.alert(err)
+}
 
 function download(filename, text) {
   var element = document.createElement('a');
@@ -47,6 +51,11 @@ let editor = new EditorView({
     oneDark,
     javascript(),
     lintGutter(),
+    history(),
+    drawSelection(),
+    keymap.of(searchKeymap),
+    keymap.of(historyKeymap),
+    keymap.of(defaultKeymap),
     linter(esLint(new eslint.Linter(), config)),
     autocompletion(),
     lineNumbers(),
@@ -62,12 +71,14 @@ let editor = new EditorView({
         "&": {height: "100vh"},
         ".cm-scroller": {overflow: "auto"},
       }),
-
-    keymap.of([{
-    key: "Ctrl-D",
-    run() { download("file.js", editor.mirror.getText()); return true }
-  }])
   ],
   parent: document.body,
   lint: true,
 });
+
+document.onkeydown = (e)=>{
+  if (e.key == "s" && e.ctrlKey) {
+    e.preventDefault();
+    download("file.js", editor.state.doc.toString());
+  }
+}
