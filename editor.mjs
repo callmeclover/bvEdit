@@ -14,29 +14,18 @@ import { Text } from "@codemirror/state"
 
 import * as eslint from "eslint-linter-browserify";
 
-function countWords(doc) {
-    let count = 0, iter = doc.iter()
-    while (!iter.next().done) {
-      let inWord = false
-      for (let i = 0; i < iter.value.length; i++) {
-        let word = /\w/.test(iter.value[i])
-        if (word && !inWord) count++
-        inWord = word
-      }
-    }
-    return `Word count: ${count}`
-  }
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
 
-  function wordCountPanel(view) {
-    let dom = document.createElement("div")
-    dom.textContent = countWords(view.state.doc)
-    return {
-      dom,
-      update(update) {
-        if (update.docChanged) dom.textContent = countWords(update.state.doc)
-      }
-    }
-  }
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
 
 const config = {
   // eslint configuration
@@ -73,9 +62,12 @@ let editor = new EditorView({
         "&": {height: "100vh"},
         ".cm-scroller": {overflow: "auto"},
       }),
+
+    keymap.of([{
+    key: "Ctrl-D",
+    run() { download("file.js", editor.mirror.getText()); return true }
+  }])
   ],
   parent: document.body,
   lint: true,
 });
-
-showPanel.of(wordCountPanel)
