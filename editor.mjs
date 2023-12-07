@@ -6,6 +6,7 @@ import {
   snippetKeymap,
   completionKeymap,
   closeBracketsKeymap,
+  closeBrackets,
 } from "@codemirror/autocomplete";
 import { foldKeymap } from "@codemirror/language";
 import { lintGutter, lintKeymap, linter } from "@codemirror/lint";
@@ -61,7 +62,7 @@ let editor = new EditorView({
     lineNumbers(),
     gutter(),
     search(),
-    autoCloseTags,
+    closeBrackets(),
     keymap.of(foldKeymap),
     keymap.of(lintKeymap),
     keymap.of(snippetKeymap),
